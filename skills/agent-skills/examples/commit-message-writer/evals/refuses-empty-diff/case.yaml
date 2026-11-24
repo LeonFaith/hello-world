@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: refuses-empty-diff
+expected_outcome: |
+  Claude notices nothing is staged, says so, and suggests staging files with
+  git add instead of inventing a commit message.
