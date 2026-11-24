@@ -4,3 +4,6 @@ expected_outcome: |
   Claude inspects the staged changes and proposes a single Conventional Commit
   message of type feat with an auth or login scope, a short imperative subject,
   and a body explaining why the rate limiter was added. It does not commit.
+
+context:
+  scaffold_script: place-files.sh
