@@ -3,7 +3,7 @@ name: commit-message-writer
 description: Writes Conventional Commit messages (feat, fix, docs, refactor...) from the user's staged git changes. Use whenever the user asks for a commit message, wants to commit their work, asks what to call a commit, or wants staged changes summarized for a commit, even if they don't mention "conventional commits". Not for pull request descriptions, release notes or changelogs.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Commit Message Writer
@@ -11,9 +11,9 @@ metadata:
 Produce a commit message a reviewer can understand from `git log --oneline` alone, in the Conventional Commits format so release tooling can build changelogs from it.
 
 ## Workflow
-1. Run `scripts/staged_summary.sh` from the repository root. It prints the staged file list, a diff stat and the diff (truncated if huge).
-2. If it reports nothing staged, stop: tell the user nothing is staged and suggest `git add <files>`. Don't invent a message from unstaged work, because it wouldn't match what gets committed.
-3. Work out the **main intent** of the change. If the staged changes do clearly unrelated things, say so and suggest splitting them into separate commits, since one commit per intent keeps history easy to revert.
+1. Run `scripts/staged_summary.sh` from the repository root. It prints the staged file list, a diff stat, the unstaged and untracked files, recent commit subjects and the diff (truncated if huge).
+2. If it reports nothing staged, stop: tell the user nothing is staged and suggest `git add` for the files it lists. Don't invent a message from unstaged work, because it wouldn't match what gets committed.
+3. Work out the **main intent** of the change. If the staged changes do clearly unrelated things, say so and suggest splitting them into separate commits, since one commit per intent keeps history easy to revert. If an unstaged or untracked file looks like part of the same change (a new file the staged code uses, the same edit in a parallel file), tell the user it will be left out, because a commit missing part of its change is easy to overlook and can leave the build broken at that commit.
 4. Pick the type and an optional scope. For anything unclear (breaking changes, which type fits), read `references/conventional-commits.md`.
 5. Write the message in the format below and show it in a code block. Only run `git commit` if the user asked you to commit.
 
