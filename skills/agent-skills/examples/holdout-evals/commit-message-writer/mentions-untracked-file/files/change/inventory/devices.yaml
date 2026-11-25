@@ -1,0 +1,7 @@
+devices:
+  - name: core-sw01
+    role: core
+    mgmt_ip: 10.0.1.1
+  - name: dist-sw05
+    role: distribution
+    mgmt_ip: 10.0.1.25

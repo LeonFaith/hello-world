@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: mentions-unstaged-pair-switch
+expected_outcome: |
+  Claude writes a message for the staged VLAN 30 change on core-sw01 and points
+  out that core-sw02.cfg has the same kind of change but is not staged, so it
+  would be left out of the commit. It does not commit.
+
+context:
+  scaffold_script: place-files.sh

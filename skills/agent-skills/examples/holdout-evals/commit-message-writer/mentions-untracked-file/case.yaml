@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: mentions-untracked-file
+expected_outcome: |
+  Claude writes a message for adding dist-sw05 to the inventory and points out
+  that the new configs/dist-sw05.cfg file is untracked, so it is not part of
+  the commit. It does not commit.
+
+context:
+  scaffold_script: place-files.sh

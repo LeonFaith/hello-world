@@ -1,0 +1,4 @@
+devices:
+  - name: core-sw01
+    role: core
+    mgmt_ip: 10.0.1.1
