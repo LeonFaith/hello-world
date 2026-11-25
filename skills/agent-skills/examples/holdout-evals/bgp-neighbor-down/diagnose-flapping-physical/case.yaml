@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: diagnose-flapping-physical
+expected_outcome: |
+  Claude finds hold-time-expired resets with the link staying up, CRC errors on
+  the uplink and an Rx power below the low alarm, and concludes the cause is the
+  physical layer (optic or fiber), not BGP. It sends no state-changing commands.
+
+context:
+  scaffold_script: place-files.sh
