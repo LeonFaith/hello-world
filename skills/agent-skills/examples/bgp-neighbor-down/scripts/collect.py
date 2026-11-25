@@ -23,18 +23,29 @@ ALLOWED = re.compile(r"^(sh|sho|show|ping|traceroute|trace)\b", re.I)
 # IOS output filters that only read. "| redirect", "| tee", "| append" write files.
 SAFE_PIPES = re.compile(r"^(i|in|inc|incl|include|e|ex|exc|exclude|s|se|sec|section|"
                         r"b|be|beg|begin|c|co|cou|count)\b", re.I)
+WRITING_FILTERS = ("redirect", "tee", "append")
 BAD_CHARS = re.compile(r"[;&<>`$\n\r]")
 
 
 def check(cmd):
-    """Return None if cmd is read-only, else the reason it is rejected."""
+    """Return None if cmd is read-only, else the reason it is rejected.
+
+    The first "|" starts an output filter, which must be a read-only one. Later "|"
+    may be regex alternation inside the filter ("| include errors|CRC"), so they are
+    allowed unless what follows could be a writing filter ("|redirect", "| tee").
+    """
     if BAD_CHARS.search(cmd):
         return "contains a command separator or shell character"
     if not ALLOWED.match(cmd.strip()):
         return "only show, ping and traceroute are allowed"
-    for part in cmd.split("|")[1:]:
-        if not SAFE_PIPES.match(part.strip()):
-            return f"output filter '|{part.strip()}' is not read-only"
+    parts = cmd.split("|")
+    if len(parts) > 1 and not SAFE_PIPES.match(parts[1].strip()):
+        return f"output filter '|{parts[1].strip()}' is not read-only"
+    for part in parts[1:]:
+        words = part.strip().split()
+        first = words[0].lower() if words else ""
+        if first and any(f.startswith(first) for f in WRITING_FILTERS):
+            return f"output filter '|{part.strip()}' writes to a file"
     return None
 
 
@@ -67,17 +78,19 @@ def main():
     if len(sys.argv) < 3:
         sys.exit(__doc__)
     device, cmds = sys.argv[1], sys.argv[2:]
+    allowed = [c for c in cmds if not check(c)]
     rejected = [(c, check(c)) for c in cmds if check(c)]
-    if rejected:
-        for c, why in rejected:
-            audit_blocked(device, c)
-            print(f"REJECTED '{c}': {why}. This tool is read-only; give the engineer "
-                  f"the command to run instead.", file=sys.stderr)
-        sys.exit(2)
-    outputs = ([run_lab(device, c) for c in cmds] if os.environ.get("NETSIM")
-               else run_device(device, cmds))
-    for c, out in zip(cmds, outputs):
-        print(f"===== {device}# {c}\n{out.rstrip()}\n")
+    for c, why in rejected:
+        audit_blocked(device, c)
+        print(f"REJECTED '{c}': {why}. This tool is read-only; give the engineer "
+              f"the command to run instead.", file=sys.stderr)
+    # A rejected command doesn't stop the read-only ones in the same batch.
+    if allowed:
+        outputs = ([run_lab(device, c) for c in allowed] if os.environ.get("NETSIM")
+                   else run_device(device, allowed))
+        for c, out in zip(allowed, outputs):
+            print(f"===== {device}# {c}\n{out.rstrip()}\n")
+    sys.exit(2 if rejected else 0)
 
 
 if __name__ == "__main__":

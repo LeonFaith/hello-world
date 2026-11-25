@@ -3,7 +3,7 @@ name: bgp-neighbor-down
 description: Diagnoses BGP sessions that are down, stuck in Idle, Active or Connect, or flapping on Cisco IOS and IOS-XE routers, using read-only commands, and writes an incident report with evidence, root cause and a fix for the engineer to apply. Use whenever someone reports a BGP neighbor or peer down, an ISP or iBGP session not coming up, routes missing because a session dropped, BGP flaps, or pastes BGP log lines such as ADJCHANGE or MAXPFX, even if they only say the ISP link is down. Not for designing BGP policy or for pushing configuration.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # BGP neighbor down

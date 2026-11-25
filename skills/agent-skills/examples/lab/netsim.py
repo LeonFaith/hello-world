@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 
 LAB = os.path.dirname(os.path.abspath(__file__))
 AUDIT = os.path.join(LAB, "audit.log")
-READ = re.compile(r"^\s*(sh|sho|show|ping|traceroute|trace)\b", re.I)
+READ = re.compile(r"^\s*(sh|sho|show|ping|traceroute|trace|help|\?|terminal length)\b", re.I)
 
 
 def norm(cmd):
