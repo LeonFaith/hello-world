@@ -27,6 +27,7 @@ A *toy* skill works on the one example you tried. A *production* skill:
 | 5 | [Scripts, references & assets](lessons/05-bundled-resources.md) | Deterministic helper scripts |
 | 6 | [Testing with evals](lessons/06-evals.md) | Test cases + graders + a benchmark |
 | 7 | [Shipping to production](lessons/07-shipping.md) | A packaged, reviewed, versioned skill |
+| 8 | [Self-improving skills, with a human gate](lessons/08-self-improving-skills.md) | A proposer → validate → approve loop |
 
 Then work through the **[production checklist](CHECKLIST.md)** for every skill you ship.
 
